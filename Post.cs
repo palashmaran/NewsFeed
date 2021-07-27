@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsFeed
 {
-    class Post
+    public class Post
     {
         User createdBy;
         string postmsg;
@@ -12,7 +12,7 @@ namespace NewsFeed
         List<Reply> reply = new List<Reply>();
         int upVotes = 0;
         int downVotes = 0;
-        DateTime timestamp;
+        DateTime timestamp = DateTime.Now;
         int postId;
         public bool AddComment(Comment comment)
         {

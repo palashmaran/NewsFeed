@@ -51,11 +51,19 @@ namespace NewsFeed
             return true;
         }
 
+        private bool isValidPostId(int postId)
+        {
+            if (!this.allpostsById.ContainsKey(postId))
+            {
+                return false;
+            }
+
+            return true;
+        }
         public bool AddReply(int postid, string replymsg)
         {
-            if(!this.allpostsById.ContainsKey(postid))
+            if(!this.isValidPostId(postid))
             {
-                Console.WriteLine("post does not exist");
                 return false;
             }
 
@@ -74,6 +82,11 @@ namespace NewsFeed
 
         public bool AddUpvote(int postId)
         {
+            if (!this.isValidPostId(postId))
+            {
+                return false;
+            }
+
             this.allpostsById[postId].UpVotes++;
            // this.loggedInuser.AddUpVote(postId);
             return true;
@@ -81,6 +94,10 @@ namespace NewsFeed
 
         public bool DownUpvote(int postId)
         {
+            if (!this.isValidPostId(postId))
+            {
+                return false;
+            }
             this.allpostsById[postId].DownVotes++;
             //this.loggedInuser.AddDownVote(postId);
             return true;
@@ -97,24 +114,76 @@ namespace NewsFeed
 
         void PrintReply(Reply reply)
         {
-            Console.WriteLine(reply.Replyid);
-            Console.WriteLine(reply.CreatedBy);
-            Console.WriteLine(reply.Replymessage);
+            Console.WriteLine("Id :" + reply.Replyid);
+            Console.WriteLine("userID :" + reply.CreatedBy);
+            Console.WriteLine("message : " + reply.Replymessage);
+            Console.WriteLine("timestamp " + reply.Timestamp.ToString());
         }
         void PrintPost(Post post)
         {
-            Console.WriteLine(post.PostId);
+            Console.WriteLine("Id: " + post.PostId);
             Console.WriteLine(post.UpVotes + " UpVotes " + post.DownVotes + " DownVotes");
-            Console.WriteLine(post.CreatedBy);
-            Console.WriteLine(post.Postmsg);
+            Console.WriteLine("Username: " + post.CreatedBy);
+            Console.WriteLine("Msg : "+ post.Postmsg);
+            Console.WriteLine("timestamp " + post.Timestamp.ToString());
+            
             foreach(var reply in post.Reply)
             {
                 PrintReply(reply);
             }
+        }
 
+        public SortedSet<Post> CreateSet(IComparer<Post> sortBy)
+        {
+            SortedSet<Post> set = new SortedSet<Post>(sortBy);
+
+            foreach (var post in this.allpostsById)
+            {
+                set.Add(post.Value);
+            }
+
+            return set;
+        }
+        public void printAllPostsFromSet(SortedSet<Post> posts)
+        {
+            foreach(var post in posts)
+            {
+                this.PrintPost(post);
+            }
+        }
+
+        public void ShowNewsFeed(SortType type)
+        {
+            SortedSet<Post> set;
+            switch(type)
+            {
+                case SortType.FOLLOWERS:
+                    Console.WriteLine("SortBy Followers start\n");
+                    ShowNewsFeedByFollowers();
+                    Console.WriteLine("SortBy Follower End\n");
+                    break;
+
+                case SortType.TIMESTAMP:
+                    Console.WriteLine("SortBy Timestamp List start\n");
+                    var sortBytimestamp = new SortByTimeStamp();
+                    set = CreateSet(sortBytimestamp);
+                    this.printAllPostsFromSet(set);
+                    Console.WriteLine("SortBy Timestamp List End\n");
+
+                    break;
+
+                case SortType.VOTES:
+                    Console.WriteLine("SortBy Votes List start\n");
+                    var sortByVotes = new SortByVotes();
+                    set = CreateSet(sortByVotes);
+                    this.printAllPostsFromSet(set);
+                    Console.WriteLine("SortBy Votes List end\n");
+                    break;
+            }
 
         }
-        public void ShowNewsFeed()
+
+        public void ShowNewsFeedByFollowers()
         {
             User user = this.loggedInuser;
             List<Follow> followers = user.Followers;

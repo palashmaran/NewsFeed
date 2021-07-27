@@ -21,17 +21,21 @@ namespace NewsFeed
 
             userService.LogIn("lucious");
 
-            userService.ShowNewsFeed();
+           // userService.ShowNewsFeed(SortType.FOLLOWERS);
 
             userService.AddUpvote(1);
             userService.DownUpvote(1);
 
-            userService.ShowNewsFeed();
+            //userService.ShowNewsFeed(SortType.FOLLOWERS);
 
             userService.FollowUser("tom");
             userService.AddReply(1, "reply post 1");
 
-            userService.ShowNewsFeed();
+            userService.ShowNewsFeed(SortType.FOLLOWERS);
+
+            userService.ShowNewsFeed(SortType.TIMESTAMP);
+
+            userService.ShowNewsFeed(SortType.VOTES);
 
             Console.WriteLine("News Feed End");
         }

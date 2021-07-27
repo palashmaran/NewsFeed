@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsFeed
 {
-    class IdGenerator
+    public class IdGenerator
     {
         private static int id = 0;
 

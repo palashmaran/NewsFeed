@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsFeed
 {
-    class Follow
+    public class Follow
     {
         string followedBy;
         string followTo;

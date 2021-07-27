@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsFeed
 {
-    class Comment
+    public class Comment
     {
         int commentId;
         string commentmsg;

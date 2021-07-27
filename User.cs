@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsFeed
 {
-    class User
+    public class User
     {
         int userid;
         string username;
